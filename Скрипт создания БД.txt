@@ -1,0 +1,78 @@
+CREATE TABLE CLIENT (
+    ID       INTEGER primary key,
+    CL_NAME  VARCHAR(32) NOT NULL
+);
+CREATE TABLE COUNTRY (
+    ID           INTEGER primary key,
+    COUNTRYNAME  VARCHAR(24) NOT NULL,
+    CONTINENT    VARCHAR(30) NOT NULL
+);
+CREATE TABLE EXCURSION (
+    ID           INTEGER primary key,
+    NAME         VARCHAR(25) NOT NULL,
+    TOURFIRM_ID  INTEGER NOT NULL,
+    EXC_COST     INTEGER
+);
+CREATE TABLE FEED (
+    ID         INTEGER primary key,
+    FEED_TYPE  VARCHAR(25) NOT NULL
+);
+CREATE TABLE HOTEL (
+    ID          INTEGER primary key,
+    HOTELNAME   VARCHAR(22) NOT NULL,
+    COUNTRY_ID  INTEGER NOT NULL,
+    STARS       INTEGER NOT NULL
+);
+CREATE TABLE ROOM (
+    ID           INTEGER primary key,
+    HOTEL_ID     INTEGER NOT NULL,
+    ROOM_NUMBER  INTEGER NOT NULL
+);
+CREATE TABLE TOUR (
+    ID           INTEGER primary key,
+    HOTEL_ID     INTEGER NOT NULL,
+    TOURFIRM_ID  INTEGER NOT NULL,
+    FEED_ID    INTEGER,
+    TOUR_COST    INTEGER,
+    DURATION     INTEGER
+);
+CREATE TABLE TOURFIRM (
+    ID          INTEGER primary key,
+    TFIRM_NAME  VARCHAR(25) NOT NULL
+);
+CREATE TABLE ORDER_TOUR (
+    ID 		 INTEGER primary key,
+    CL_ID	 INTEGER NOT NULL,
+    TOUR_ID 	 INTEGER NOT NULL,
+    DATE_IN 	 DATE,
+    ORDER_COST  INTEGER
+);
+CREATE TABLE TOUR_EXCURSION (
+    TOUR_ID	INTEGER NOT NULL,
+    EXC_ID	INTEGER not null
+);
+
+alter table  excursion add constraint excursion_to_tourfirm foreign key (tourfirm_id)
+references tourfirm(ID);
+
+alter table  hotel add constraint hotel_to_country foreign key (country_id)
+references country(ID);
+alter table  room add constraint room_to_hotel foreign key (hotel_id)
+references hotel(ID);
+alter table  tour add constraint tour_to_hotel foreign key (hotel_id)
+references hotel(ID);
+alter table  tour add constraint tour_to_tourfirm foreign key (tourfirm_id)
+references tourfirm(ID);
+
+alter table  order_tour add constraint ordertour_to_client foreign key (cl_id)
+references client(ID);
+alter table  order_tour add constraint ordertour_to_tour foreign key (tour_id)
+references tour(ID);
+
+alter table  tour_excursion add constraint tour_exc_to_tour foreign key (tour_id)
+references tour(ID);
+alter table  tour_excursion add constraint tour_exc_to_exc foreign key (exc_id)
+references excursion(ID);
+
+alter table  tour add constraint tour_to_feed foreign key (feed_id)
+references feed(ID);
